@@ -159,6 +159,24 @@ class Indapocket {
 	}
 
 
+	reset() {
+		const $progressBar = $('#downloading .progressbar .value')
+
+		this.state = NOTHING
+		this.info = null
+		this.infoURL = ''
+		this.formatSelected = null
+
+		$("#downloading .background").css('background-image', null)
+		$("#downloading .info").html('')
+		$("#downloading").fadeOut(500)
+		$("form button, form input").removeAttr('disabled')
+		$('#url, #filename').val('')
+		$("#downloading .size").text('')
+		$progressBar.css('width', 0)
+	}
+
+
 	/**
 	 * Remplir automatiquement le champ URL
 	 * avec le contenu du presse-papier 
@@ -215,71 +233,6 @@ class Indapocket {
 			this.download()
 
 		}
-
-
-
-
-/*
-		event.preventDefault()
-
-		const progressBar = document.querySelector('progress')
-
-		const download = ytdl(this.url, [], { cwd: this.downloadsPath })
-
-		let info
-		let pos = 0
-
-		console.log("Starting download")
-
-		console.log(download)
-
-
-		download.on('error', (err) => {
-
-			console.error(err)
-
-		})
-
-		download.on('info', (_info) => {
-
-			info = _info
-
-			console.log(info)
-
-			const output = path.join(this.downloadsPath, info._filename)
-			
-			download.pipe(fs.createWriteStream(output))
-
-		})
-
-		download.on('data', (chunk) => {
-
-			//console.log("receiving data")
-
-			pos += chunk.length
-
-			if (info && info.size) {
-
-				let percent = (pos / info.size * 100).toFixed(2)
-				progressBar.value = percent.toString()
-
-			}
-
-		})
-
-		download.on('next', (url) => {
-
-			console.log(`Next download: ${url}`)
-
-			//download(url, parameters)
-
-		})
-
-		download.on('end', () => {
-
-			console.log(`Download is over: ${info._filename}`)
-
-		})*/
 
 	}
 
@@ -371,6 +324,7 @@ class Indapocket {
 		download.on('end', () => {
 
 			console.info(`Download is over: ${this.filename}`)
+			this.reset()
 
 		})
 
@@ -542,7 +496,6 @@ class Indapocket {
 		}
 
 	}
-
 
 	/**
 	 * Supprime les caractères HTML
